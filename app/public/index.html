@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>World Headlines — Live News Globe</title>
+  <meta name="description" content="Live global news headlines on an interactive 3D globe. Real-time updates powered by AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ADMIN LOGIN OVERLAY -->
+  <div id="login-overlay" class="login-overlay" style="display:none;">
+    <div class="login-card">
+      <div class="modal-header">
+        <h2>🛠️ Admin Portal</h2>
+        <button id="login-close-btn" class="close-btn">✕</button>
+      </div>
+      <div class="login-section">
+        <p>Acesso exclusivo para gerenciamento do sistema.</p>
+        <input type="text" id="admin-user" placeholder="Usuário" />
+        <input type="password" id="admin-pass" placeholder="Senha" />
+        <button id="admin-login-btn" class="btn secondary" style="width: 100%;">Entrar como Admin</button>
+      </div>
+      <div id="login-error" style="color: #ff5757; margin-top: 10px; text-align: center;"></div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header id="top-bar">
+    <div class="logo">🌍 <span>WORLD HEADLINES</span></div>
+    <div class="header-info">
+      <span id="total-count">— manchetes</span>
+      <span class="sep">·</span>
+      <span id="last-update">Aguardando...</span>
+    <div class="header-controls">
+      <button id="lang-toggle" title="Trocar Idioma">🇧🇷 PT</button>
+      <button id="theme-toggle" title="Trocar Visual (Claro/Escuro)">🌓</button>
+      <button id="refresh-btn" title="Forçar atualização">⟳</button>
+      <button id="logout-btn" title="Sair / Trocar de Usuário">🚪</button>
+    </div>
+  </header>
+
+  <!-- GLOBE -->
+  <div id="map-container">
+    <svg width="0" height="0" style="position:absolute;z-index:-1;">
+      <defs>
+        <radialGradient id="ocean-gradient" cx="40%" cy="40%" r="65%">
+          <stop offset="0%" stop-color="#77bfd1" />
+          <stop offset="40%" stop-color="#61acc3" />
+          <stop offset="85%" stop-color="#3f94ac" />
+          <stop offset="100%" stop-color="#1e6e89" />
+        </radialGradient>
+      </defs>
+    </svg>
+    <svg id="map-svg"></svg>
+    <div id="sources-layer"></div>
+
+    <!-- ADMIN ONLY: Map Action Buttons -->
+    <div id="map-actions-container">
+      <button id="add-source-btn" title="Adicionar nova fonte de notícia">
+        <span>➕</span>
+        <small data-i18n="add_source">ADICIONAR FONTE</small>
+      </button>
+      <button id="remove-source-btn" title="Remover uma fonte de notícia">
+        <span>➖</span>
+        <small data-i18n="remove_source">REMOVER FONTE</small>
+      </button>
+      <button id="edit-source-btn" title="Editar uma fonte de notícia">
+        <span>✏️</span>
+        <small data-i18n="edit_source">EDITAR FONTE</small>
+      </button>
+    </div>
+
+    <!-- VISITOR ONLY: Submit URL Panel -->
+    <div id="visitor-url-panel">
+      <div class="vup-header">
+        <div class="vup-icon">🔗</div>
+        <div class="vup-label" data-i18n="suggest_source">Sugerir Fonte</div>
+      </div>
+      <div class="vup-input-row">
+        <input type="url" id="visitor-url-input" data-i18n-placeholder="paste_url_placeholder" placeholder="Cole a URL aqui" />
+        <button id="visitor-url-submit" title="Enviar URL" data-i18n="send_url">Enviar ➤</button>
+      </div>
+      <div id="visitor-url-feedback"></div>
+    </div>
+
+    <div id="remove-instr" data-i18n="remove_instr">Selecione uma fonte no globo para removê-la. (Pressione ESC para cancelar)</div>
+    <div id="edit-instr" data-i18n="edit_instr">Selecione uma fonte no globo para editá-la. (Pressione ESC para cancelar)</div>
+  </div>
+
+  <!-- ADD / EDIT SOURCE MODAL (ADMIN) -->
+  <div id="add-source-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title" data-i18n="modal_title_add">➕ Nova Fonte de Notícias</h3>
+        <button id="modal-close-btn" class="close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-source-id" />
+        <label data-i18n="source_name">Nome da Fonte</label>
+        <input type="text" id="source-name" placeholder="Ex: BBC News, Folha..." />
+        <label data-i18n="source_country">País</label>
+        <input type="text" id="source-country" placeholder="Ex: Brasil, United States..." />
+        <label data-i18n="source_city">Cidade</label>
+        <input type="text" id="source-city" placeholder="Ex: São Paulo, New York..." />
+        <label data-i18n="source_rss">URL do Feed RSS</label>
+        <input type="text" id="source-rss" placeholder="https://exemplo.com/rss.xml" />
+        <div class="coords-group">
+          <div class="coord-field">
+            <label data-i18n="latitude">Latitude</label>
+            <input type="text" id="source-lat" readonly placeholder="0.00" />
+          </div>
+          <div class="coord-field">
+            <label data-i18n="longitude">Longitude</label>
+            <input type="text" id="source-lon" readonly placeholder="0.00" />
+          </div>
+          <button id="pick-coords-btn" class="btn secondary" data-i18n="pick_map">📍 Escolher no Mapa</button>
+        </div>
+        <p class="instr" id="pick-instr" data-i18n="pick_instr">Clique em um ponto no globo para definir a localização.</p>
+        <button id="save-source-btn" class="btn primary" data-i18n="save_source">Salvar Fonte e Atualizar Globo</button>
+        <hr style="margin: 20px 0; border: none; border-top: 1px solid rgba(255,255,255,0.1);" />
+        <div class="manage-sources-section">
+          <h4 data-i18n="manage_sources">📋 Gerenciar Fontes Existentes</h4>
+          <div id="manage-sources-list" class="source-list-container">
+            <div class="loading-sources" data-i18n="loading_sources">Carregando fontes...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tooltip"></div>
+
+  <!-- COUNTRY SIDE PANEL -->
+  <aside id="country-panel">
+    <div class="cp-header">
+      <h2 id="country-panel-title"></h2>
+      <button id="country-panel-close" title="Fechar">✕</button>
+    </div>
+    <div id="country-panel-loading" class="loading-state" style="height:80px;display:none">
+      <div class="spinner"></div>
+    </div>
+    <ul id="country-panel-list"></ul>
+  </aside>
+
+  <!-- ARTICLE POPUP -->
+  <div id="popup-overlay">
+    <div id="popup-content">
+      <button id="popup-close" title="Fechar">✕</button>
+      <div id="popup-body"></div>
+    </div>
+  </div>
+
+  <!-- BLOG GENERATOR (ADMIN ONLY) -->
+  <div id="blog-generator-widget">
+    <div class="bg-header" data-i18n="blog_generator">✍️ Gerador de Blog</div>
+    <div class="bg-buttons">
+      <button class="bg-btn accent-1" onclick="generateBlog('esquerda', 'positiva')" data-i18n="blog_left_positive">Esquerda (Positiva)</button>
+      <button class="bg-btn accent-1 neg" onclick="generateBlog('esquerda', 'negativa')" data-i18n="blog_left_negative">Esquerda (Negativa)</button>
+      <button class="bg-btn accent-2" onclick="generateBlog('direita', 'positiva')" data-i18n="blog_right_positive">Direita (Positiva)</button>
+      <button class="bg-btn accent-2 neg" onclick="generateBlog('direita', 'negativa')" data-i18n="blog_right_negative">Direita (Negativa)</button>
+    </div>
+  </div>
+
+  <!-- ADMIN: SUGGESTED URLS PANEL -->
+  <div id="suggested-urls-widget">
+    <div class="suw-header">
+      <span data-i18n="suggested_urls_title">🔗 URLs Enviadas</span>
+      <button id="suw-refresh-btn" title="Recarregar">⟳</button>
+    </div>
+    <div id="suw-list">
+      <div class="suw-empty">Nenhuma URL enviada ainda.</div>
+    </div>
+  </div>
+
+  <!-- LUPA - AI CHAT WIDGET -->
+  <div id="ai-chat-widget">
+
+    <!-- NEWS TICKER — visible only when chat is open, fills the space above -->
+    <div id="news-ticker-widget">
+      <div class="ntw-header">
+        <span class="ntw-pulse"></span>
+        <span class="ntw-title" data-i18n="latest_news">ÚLTIMAS NOTÍCIAS</span>
+      </div>
+      <div id="ntw-list" class="ntw-list">
+        <!-- headlines injected here -->
+      </div>
+      <div class="ntw-progress-bar">
+        <div id="ntw-progress"></div>
+      </div>
+    </div>
+
+    <div id="ai-chat-window" class="chat-window">
+      <div class="chat-header">
+        <div class="chat-title">🤖 LUPA</div>
+        <div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
+          <select id="chat-model-select" title="Escolha o modelo de IA">
+            <option value="gemini-flash-latest" data-i18n="chat_flash">Flash 3.1 (Rápido)</option>
+            <option value="gemini-pro-latest" data-i18n="chat_pro">Pro 3.1 (Poderoso)</option>
+            <option value="deep-research-pro-preview-12-2025" data-i18n="chat_deep_research">Deep Research 🧪</option>
+          </select>
+          <button id="chat-clear" title="Limpar conversa" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:12px;">🗑️</button>
+          <button id="chat-close">✕</button>
+        </div>
+      </div>
+      <div id="chat-messages" class="chat-messages">
+        <div class="msg ai" data-i18n="chat_welcome">Olá! Eu sou seu assistente de notícias. Posso analisar todas as manchetes atuais para você. O que gostaria de saber?</div>
+      </div>
+      <!-- API Key area for visitors -->
+      <div id="lupa-api-key-area" class="lupa-api-key-area" style="display:none;">
+        <div class="lupa-key-label" data-i18n="lupa_key_label">🔑 Insira sua chave Gemini API para usar Lupa</div>
+        <div class="lupa-key-row">
+          <input type="password" id="lupa-api-key-input" placeholder="AIza..." />
+          <button id="lupa-api-key-save">Salvar</button>
+        </div>
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" class="lupa-key-link" data-i18n="lupa_key_get">Obter chave grátis →</a>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Pergunte sobre as notícias..." data-i18n-placeholder="chat_placeholder" />
+        <button id="chat-send">➤</button>
+      </div>
+    </div>
+    <button id="ai-chat-toggle" title="Falar com a Lupa">
+      <span class="ai-icon">🤖</span>
+      <span class="ai-label">Lupa</span>
+    </button>
+  </div>
+
+  <!-- D3 + TopoJSON + Marked -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Article Preview — World Headlines</title>
+    <meta name="description"
+        content="News article preview with full RSS details before visiting the original source." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="article-page">
+
+    <header id="top-bar">
+        <div class="logo"><a href="/" style="text-decoration:none;color:inherit;">🌍 <span>WORLD HEADLINES</span></a>
+        </div>
+        <div class="header-info">
+            <a href="/" class="back-btn">← Voltar ao mapa</a>
+        </div>
+    </header>
+
+    <main id="article-main">
+        <div id="article-loading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Carregando manchete...</p>
+        </div>
+
+        <article id="article-content" class="hidden">
+            <div id="article-hero"></div>
+
+            <div class="article-meta">
+                <span id="article-flag"></span>
+                <span id="article-source-name" class="source-name-big"></span>
+                <span id="article-lean-badge" class="lean-badge"></span>
+                <span class="sep">·</span>
+                <span id="article-date"></span>
+            </div>
+
+            <h1 id="article-title"></h1>
+
+            <div id="article-author" class="article-author hidden"></div>
+            <div id="article-categories" class="article-categories hidden"></div>
+            <div id="article-description" class="article-description"></div>
+
+            <a id="article-link" href="#" target="_blank" rel="noopener noreferrer" class="read-full-btn">
+                Ler artigo completo →
+            </a>
+        </article>
+
+        <aside id="history-panel" class="hidden">
+            <h2>Manchetes recentes — <span id="history-source-name"></span></h2>
+            <ul id="history-list"></ul>
+        </aside>
+    </main>
+
+    <script src="article.js"></script>
+</body>
+
+</html>

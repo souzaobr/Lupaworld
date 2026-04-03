@@ -1,0 +1,24 @@
+{
+  "name": "world-news-aggregator",
+  "version": "1.0.0",
+  "description": "Global news headlines aggregator with Boggs eumorphic world map",
+  "main": "app/server.js",
+  "scripts": {
+    "start": "node app/server.js",
+    "dev": "node app/server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.13.6",
+    "better-sqlite3": "^9.4.3",
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "duck-duck-scrape": "^2.2.7",
+    "express": "^4.18.2",
+    "google-it": "^1.6.4",
+    "node-cron": "^3.0.3",
+    "pdfkit": "^0.18.0",
+    "rss-parser": "^3.13.0"
+  }
+}
