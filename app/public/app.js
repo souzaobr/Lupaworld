@@ -662,14 +662,22 @@ async function initGlobe() {
 
     d3.select(container).call(dragBehavior);
 
-    // ── Zoom ──
-    svg.on('wheel', (event) => {
-        event.preventDefault();
-        const zoomFactor = event.deltaY > 0 ? 0.92 : 1.08;
-        globeScale = Math.max(0.5, Math.min(4, globeScale * zoomFactor));
-        projection.scale(baseRadius * globeScale);
-        updateGlobe();
-    }, { passive: false });
+    // ── Zoom (Desktop Wheel & Mobile Pinch) ──
+    const zoomBehavior = d3.zoom()
+        .scaleExtent([0.5, 6]) // Min and Max zoom
+        .on('zoom', (event) => {
+            globeScale = event.transform.k;
+            projection.scale(baseRadius * globeScale);
+            updateGlobe();
+        });
+
+    // Apply zoom to the container but disable double-click zoom to avoid conflicts with markers
+    d3.select(container)
+        .call(zoomBehavior)
+        .on("dblclick.zoom", null);
+
+    // Initial scale sync
+    d3.select(container).call(zoomBehavior.transform, d3.zoomIdentity.scale(globeScale));
 
     // ── Store references for updateGlobe ──
     window.__globe = { svg, W, H, baseRadius, graticule };
