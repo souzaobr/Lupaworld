@@ -1641,37 +1641,40 @@ body.panel-open #ai-chat-widget {
 
   /* 3. BOTTOM RIGHT: Lupa Chat Control */
   #ai-chat-toggle {
-    scale: 0.8;
-    position: fixed; bottom: 15px; right: 15px;
+    scale: 0.7; /* Smaller toggle */
+    position: fixed; bottom: 12px; right: 12px;
     box-shadow: 0 0 20px rgba(74,158,255,0.4);
   }
   .chat-window {
-    width: 92vw !important; height: 60vh !important;
-    bottom: 80px; right: 4vw; left: 4vw;
+    width: 92vw !important; 
+    height: 50vh !important; /* Shorter chat window */
+    bottom: 70px; right: 4vw; left: 4vw;
   }
 
   /* 4. MIDDLE RIGHT: ZOOM CONTROLS */
   #mobile-zoom-controls {
-    position: fixed; right: 15px; top: 45%; 
+    position: fixed; right: 12px; top: 40%; 
     display: flex; flex-direction: column; gap: 10px;
     z-index: 600;
   }
-  #mobile-zoom-controls button {
-    width: 36px; height: 36px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 50%; color: white; font-size: 18px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-  }
-  #mobile-zoom-controls button:active { background: var(--accent); }
-
-  /* Country Panel as a high drawer */
-  #country-panel { width: 100% !important; height: 50vh !important; top: auto !important; bottom: 0 !important; }
   
-  /* Popup Article full size */
-  .popup-card { width: 95% !important; height: 95% !important; margin: 2.5% auto; }
+  /* Article Popup: MUST BE ON TOP OF EVERYTHING */
+  #popup-overlay {
+    z-index: 30000 !important; /* Higher than widgets and header */
+  }
+  .popup-card {
+    width: 96% !important;
+    height: 92% !important;
+    margin: 4% auto;
+    border-radius: 16px;
+  }
+  #popup-close {
+    width: 44px; height: 44px; /* Big touch target */
+    font-size: 20px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 50%;
+    top: 10px; right: 10px;
+  }
 }
 
 @keyframes ntw-fade-in {
