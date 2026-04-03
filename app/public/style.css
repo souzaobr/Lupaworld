@@ -1574,3 +1574,108 @@ body.panel-open #ai-chat-widget {
   80%       { transform: translateX(4px); }
 }
 .input-shake { animation: input-shake 0.45s ease; }
+
+/* ============================================================ */
+/* =================== MOBILE RESPONSIVENESS ================== */
+/* ============================================================ */
+
+@media (max-width: 768px) {
+  /* Header adjustments */
+  #top-bar {
+    padding: 0 12px;
+    height: 54px;
+    justify-content: space-between;
+  }
+  .logo { font-size: 14px; }
+  .logo span { display: none; } /* Hide "WORLD HEADLINES" text, keep emoji */
+  .header-info { display: none; } /* Hide stats on mobile header to save space */
+  .header-controls { gap: 6px; }
+  .header-controls button { padding: 4px 8px; font-size: 14px; }
+
+  /* Globe interaction area */
+  #map-container { top: 54px; }
+
+  /* Ticker and Chat Widget positioning */
+  #ai-chat-widget {
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    width: auto;
+    gap: 10px;
+  }
+  
+  #news-ticker-widget, .chat-window {
+    width: 100% !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    border-radius: 12px !important;
+  }
+
+  .chat-window {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    z-index: 10001;
+    border-radius: 0 !important;
+  }
+
+  #news-ticker-widget {
+    height: 180px; /* Slimmer ticker on mobile */
+  }
+
+  /* Visitor URL Panel - reposition to top-left area or make it floating */
+  #visitor-url-panel {
+    top: 10px;
+    left: 10px;
+    transform: none;
+    width: 140px;
+    padding: 10px;
+    gap: 8px;
+    background: rgba(10, 16, 32, 0.95);
+  }
+  .vup-label { font-size: 8px; }
+  .vup-input-row input { padding: 6px 8px; font-size: 10px; }
+  .vup-input-row button { height: 28px; font-size: 12px; }
+
+  /* Country Side Panel (the one that pushes everything) */
+  #country-panel {
+    width: 100% !important;
+    height: 40vh !important;
+    bottom: 0 !important;
+    top: auto !important;
+    right: 0 !important;
+    border-left: none !important;
+    border-top: 1px solid var(--border) !important;
+    background: rgba(12, 18, 36, 0.98);
+  }
+  
+  /* Prevent shifting layout on mobile since panels are full-screen or overlays */
+  body.country-open #ai-chat-widget {
+    transform: translateY(-40vh);
+  }
+  
+  body.country-open #visitor-url-panel {
+    display: none;
+  }
+
+  /* Admin Widget adjustments */
+  #blog-generator-widget {
+    left: 10px;
+    bottom: 80px;
+    width: 140px;
+    padding: 8px;
+  }
+  .bg-btn { padding: 5px; font-size: 9px; }
+
+  /* Popup/Article adjustments */
+  .popup-card {
+    width: 90% !important;
+    max-height: 85vh !important;
+  }
+}
