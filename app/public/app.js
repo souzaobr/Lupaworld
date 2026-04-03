@@ -663,28 +663,29 @@ async function initGlobe() {
     d3.select(container).call(dragBehavior);
 
     // ── Zoom (Desktop Wheel & Mobile Pinch) ──
-    const zoomBehavior = d3.zoom()
-        .scaleExtent([0.5, 6]) // Min and Max zoom
-        .filter((event) => {
-            // ONLY allow zoom via wheel or multi-touch (two fingers)
-            // This prevents conflict with rotation (single touch drag)
-            if (event.type === 'wheel') return true;
-            if (event.type === 'touchstart' && event.touches.length > 1) return true;
-            return false;
-        })
-        .on('zoom', (event) => {
-            globeScale = event.transform.k;
-            projection.scale(baseRadius * globeScale);
-            updateGlobe();
-        });
+    try {
+        const zoomBehavior = d3.zoom()
+            .scaleExtent([0.5, 6])
+            .filter((event) => {
+                if (event.type === 'wheel') return true;
+                if (event.type === 'touchstart' && event.touches.length > 1) return true;
+                return false;
+            })
+            .on('zoom', (event) => {
+                globeScale = event.transform.k;
+                projection.scale(baseRadius * globeScale);
+                updateGlobe();
+            });
 
-    // Apply zoom to the container
-    d3.select(container)
-        .call(zoomBehavior)
-        .on("dblclick.zoom", null);
-
-    // Initial scale sync
-    d3.select(container).call(zoomBehavior.transform, d3.zoomIdentity.scale(globeScale));
+        d3.select(container)
+            .call(zoomBehavior)
+            .on("dblclick.zoom", null);
+            
+        // Initial scale sync
+        d3.select(container).call(zoomBehavior.transform, d3.zoomIdentity.scale(globeScale));
+    } catch (e) {
+        console.error("Zoom init error:", e);
+    }
 
     // ── Store references for updateGlobe ──
     window.__globe = { svg, W, H, baseRadius, graticule };

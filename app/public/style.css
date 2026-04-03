@@ -1647,17 +1647,20 @@ body.panel-open #ai-chat-widget {
     z-index: 500;
   }
   .chat-window {
+    position: fixed !important; /* Force fixed to avoid parent container offsets */
     width: 75vw !important; 
     height: 60vh !important; 
-    bottom: 0 !important; /* Zero margin from bottom */
-    right: 0 !important;  /* Zero margin from right */
+    bottom: 0 !important; 
+    right: 0 !important;
     left: auto !important;
     z-index: 10001; 
-    border-radius: 12px 0 0 0 !important; /* Sharp corner for bottom-right corner alignment */
+    border-radius: 12px 0 0 0 !important;
     box-shadow: 0 -5px 30px rgba(0,0,0,0.8);
     border: 1px solid rgba(74, 158, 255, 0.4) !important;
     border-bottom: none !important;
     border-right: none !important;
+    background: rgba(12, 18, 36, 0.98);
+    backdrop-filter: blur(30px);
   }
 
   /* 4. MIDDLE RIGHT: ZOOM CONTROLS */
