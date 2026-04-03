@@ -665,13 +665,20 @@ async function initGlobe() {
     // ── Zoom (Desktop Wheel & Mobile Pinch) ──
     const zoomBehavior = d3.zoom()
         .scaleExtent([0.5, 6]) // Min and Max zoom
+        .filter((event) => {
+            // ONLY allow zoom via wheel or multi-touch (two fingers)
+            // This prevents conflict with rotation (single touch drag)
+            if (event.type === 'wheel') return true;
+            if (event.type === 'touchstart' && event.touches.length > 1) return true;
+            return false;
+        })
         .on('zoom', (event) => {
             globeScale = event.transform.k;
             projection.scale(baseRadius * globeScale);
             updateGlobe();
         });
 
-    // Apply zoom to the container but disable double-click zoom to avoid conflicts with markers
+    // Apply zoom to the container
     d3.select(container)
         .call(zoomBehavior)
         .on("dblclick.zoom", null);
