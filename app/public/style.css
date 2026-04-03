@@ -1639,21 +1639,27 @@ body.panel-open #ai-chat-widget {
     position: absolute; top: 5px; right: 5px; font-size: 14px; transform: rotate(45deg); height: 24px; width: 24px; min-height: 24px;
   }
 
-  /* 3. BOTTOM RIGHT: Lupa Chat Control */
+  /* 3. BOTTOM RIGHT: Lupa Chat Control & Window Overlay */
   #ai-chat-toggle {
-    scale: 0.7; /* Smaller toggle */
+    scale: 0.7; 
     position: fixed; bottom: 12px; right: 12px;
     box-shadow: 0 0 20px rgba(74,158,255,0.4);
+    z-index: 500; /* Button below window when open */
   }
   .chat-window {
-    width: 92vw !important; 
-    height: 50vh !important; /* Shorter chat window */
-    bottom: 70px; right: 4vw; left: 4vw;
+    width: 90vw !important; 
+    height: 78vh !important; /* Tall vertical proportions as requested */
+    bottom: 12px !important; /* Start from the very base over the button */
+    right: 5vw !important; 
+    left: 5vw !important;
+    z-index: 10001; /* Above toggle button */
+    border-radius: 20px !important;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.9);
   }
 
   /* 4. MIDDLE RIGHT: ZOOM CONTROLS */
   #mobile-zoom-controls {
-    position: fixed; right: 12px; top: 40%; 
+    position: fixed; right: 12px; top: 35%; 
     display: flex; flex-direction: column; gap: 10px;
     z-index: 600;
   }
