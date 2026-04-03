@@ -73,17 +73,28 @@
       </button>
     </div>
 
-    <!-- VISITOR ONLY: Submit URL Panel -->
-    <div id="visitor-url-panel">
-      <div class="vup-header">
-        <div class="vup-icon">🔗</div>
-        <div class="vup-label" data-i18n="suggest_source">Sugerir Fonte</div>
+    <!-- VISITOR ONLY: Submit URL Panel (Strategic position: Bottom-Left) -->
+    <div id="visitor-url-panel" class="mobile-tactical-panel">
+      <!-- Mobile Toggle Button (Visible only on phone) -->
+      <button id="vup-mobile-toggle" title="Sugerir Fonte">＋</button>
+      
+      <div class="vup-content-wrapper">
+        <div class="vup-header">
+          <div class="vup-icon">🔗</div>
+          <div class="vup-label" data-i18n="suggest_source">Sugerir Fonte</div>
+        </div>
+        <div class="vup-input-row">
+          <input type="url" id="visitor-url-input" data-i18n-placeholder="paste_url_placeholder" placeholder="Cole a URL aqui" />
+          <button id="visitor-url-submit" title="Enviar URL" data-i18n="send_url">Enviar ➤</button>
+        </div>
+        <div id="visitor-url-feedback"></div>
       </div>
-      <div class="vup-input-row">
-        <input type="url" id="visitor-url-input" data-i18n-placeholder="paste_url_placeholder" placeholder="Cole a URL aqui" />
-        <button id="visitor-url-submit" title="Enviar URL" data-i18n="send_url">Enviar ➤</button>
-      </div>
-      <div id="visitor-url-feedback"></div>
+    </div>
+
+    <!-- Mobile Zoom Controls (Strategic position: Middle-Right) -->
+    <div id="mobile-zoom-controls">
+      <button id="zoom-in-btn">＋</button>
+      <button id="zoom-out-btn">－</button>
     </div>
 
     <div id="remove-instr" data-i18n="remove_instr">Selecione uma fonte no globo para removê-la. (Pressione ESC para cancelar)</div>

@@ -1580,106 +1580,101 @@ body.panel-open #ai-chat-widget {
 /* ============================================================ */
 
 @media (max-width: 768px) {
-  /* Keep the header rich but compact */
-  #top-bar {
-    padding: 0 10px;
-    height: 50px;
-    background: rgba(10, 16, 32, 0.88);
-  }
-  .logo { font-size: 13px; }
-  .logo span { display: inline; font-size: 8px; opacity: 0.6; } /* Show small text */
-  .header-info { 
-    display: flex; /* Re-enable stats but simplified */
-    font-size: 8px;
-    background: rgba(255,255,255,0.03);
-    padding: 4px 8px;
-    border-radius: 20px;
-    gap: 10px;
-  }
-  .header-info .stat-item:last-child { display: none; } /* Hide only timer to save room */
-  .header-controls { scale: 0.85; transform-origin: right; }
+  /* Hide desktop header details */
+  #top-bar { height: 44px; padding: 0 8px; justify-content: center; }
+  .logo { font-size: 11px; }
+  .logo span { display: none; }
+  .header-info, .header-controls { display: none; } /* Focus on the map and pins */
 
-  /* Globe interaction area */
-  #map-container { top: 50px; }
+  #map-container { top: 0; background: #000; }
 
-  /* Floating Widgets: Desktop Feel on Mobile */
+  /* 1. TOP RIGHT: Mini-Ticker Cycling 1 Headline */
   #ai-chat-widget {
-    right: 8px;
-    bottom: 8px;
-    left: 8px;
-    width: auto;
-    gap: 8px;
-    pointer-events: none; /* Allow globe rotation behind empty space */
+    top: 50px; right: 10px; bottom: 10px; left: 10px;
+    width: auto; height: auto; pointer-events: none;
+    flex-direction: column; justify-content: flex-start; align-items: flex-end;
   }
-  
-  #ai-chat-widget > * { pointer-events: auto; } /* Re-enable clicks for widgets */
+  #ai-chat-widget > * { pointer-events: auto; }
 
   #news-ticker-widget {
-    width: 280px !important; /* Fixed width floating panel */
-    height: 25vh !important;
-    max-height: 220px;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    margin-bottom: 60px; /* Leave space for chat toggle */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    position: fixed; top: 10px; right: 10px;
+    width: 200px !important; height: 50px !important;
+    border-radius: 25px !important;
+    background: rgba(12, 18, 36, 0.9);
+    border: 1px solid rgba(74, 158, 255, 0.4) !important;
+    overflow: hidden;
   }
-
-  .chat-window {
-    position: fixed;
-    top: auto;
-    bottom: 80px;
-    left: 10px;
-    right: 10px;
-    width: auto !important;
-    height: 380px !important;
-    max-height: 50vh !important;
-    border-radius: 12px !important;
-    z-index: 10001;
-    background: rgba(12, 18, 36, 0.95);
-    backdrop-filter: blur(25px);
-    border: 1px solid rgba(74, 158, 255, 0.3) !important;
+  .ntw-header { display: none; } /* Hide the red bar on mobile ticker */
+  .ntw-item { 
+    height: 100%; padding: 0 15px; 
+    align-items: center; justify-content: center; text-align: center;
+    border: none !important;
   }
+  .ntw-item-source { display: none; }
+  .ntw-item-title { font-size: 10px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
+  .ntw-item-time { display: none; }
 
-  /* Visitor URL Panel - Floating bubble top-left */
+  /* 2. BOTTOM LEFT: Suggested Source (+) Toggle */
   #visitor-url-panel {
-    top: 60px;
-    left: 10px;
-    transform: none;
-    width: 150px;
-    padding: 12px;
-    background: rgba(10, 16, 32, 0.88);
-    backdrop-filter: blur(15px);
-    border-radius: 14px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    position: fixed; bottom: 15px; left: 15px; top: auto; transform: none;
+    width: 44px; height: 44px; border-radius: 22px;
+    padding: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(74, 158, 255, 0.2);
+    border-color: rgba(74, 158, 255, 0.5);
+    overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
   }
-  .vup-icon { font-size: 14px; }
-  .vup-label { font-size: 9px; }
-  .vup-input-row input { padding: 6px 10px; font-size: 11px; }
-
-  /* Country Side Panel - Desktop Slide on Mobile */
-  #country-panel {
-    width: 85% !important; /* Don't cover 100%, keep desktop 'drawer' feel */
-    height: 100vh !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    right: 0 !important;
-    left: auto !important;
-    background: rgba(8, 14, 28, 0.96);
-    backdrop-filter: blur(30px);
-    box-shadow: -20px 0 60px rgba(0,0,0,0.8);
-    border-left: 1px solid rgba(74, 158, 255, 0.2) !important;
-    border-top: none !important;
+  #vup-mobile-toggle {
+    display: flex; width: 44px; height: 44px; min-height: 44px;
+    background: none; border: none; color: white;
+    font-size: 20px; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .vup-content-wrapper { display: none; padding: 15px; width: 220px; }
+  #visitor-url-panel.expanded {
+    width: 240px; height: auto; border-radius: 12px;
+    background: rgba(10, 16, 32, 0.98);
+  }
+  #visitor-url-panel.expanded .vup-content-wrapper { display: block; }
+  #visitor-url-panel.expanded #vup-mobile-toggle { 
+    position: absolute; top: 5px; right: 5px; font-size: 14px; transform: rotate(45deg); height: 24px; width: 24px; min-height: 24px;
   }
 
-  /* Font Adjustments */
-  .ntw-item-title { font-size: 12px; }
-  .msg { font-size: 12px; }
+  /* 3. BOTTOM RIGHT: Lupa Chat Control */
+  #ai-chat-toggle {
+    scale: 0.8;
+    position: fixed; bottom: 15px; right: 15px;
+    box-shadow: 0 0 20px rgba(74,158,255,0.4);
+  }
+  .chat-window {
+    width: 92vw !important; height: 60vh !important;
+    bottom: 80px; right: 4vw; left: 4vw;
+  }
+
+  /* 4. MIDDLE RIGHT: ZOOM CONTROLS */
+  #mobile-zoom-controls {
+    position: fixed; right: 15px; top: 45%; 
+    display: flex; flex-direction: column; gap: 10px;
+    z-index: 600;
+  }
+  #mobile-zoom-controls button {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50%; color: white; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  #mobile-zoom-controls button:active { background: var(--accent); }
+
+  /* Country Panel as a high drawer */
+  #country-panel { width: 100% !important; height: 50vh !important; top: auto !important; bottom: 0 !important; }
   
-  /* Popup/Article adjustments */
-  .popup-card {
-    width: 95% !important;
-    height: 90vh !important;
-    margin: 5vh auto;
-  }
+  /* Popup Article full size */
+  .popup-card { width: 95% !important; height: 95% !important; margin: 2.5% auto; }
+}
+
+@keyframes ntw-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

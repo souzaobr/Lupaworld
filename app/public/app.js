@@ -25,6 +25,39 @@ let isPickingCoords = false; // Mode to select coordinates on globe
 let isRemovingSource = false; // Mode to delete a source by clicking
 let isEditingSource = false; // Mode to edit a source by clicking
 
+// --- MOBILE TACTICAL LOGIC ---
+const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad/i.test(navigator.userAgent);
+if (isMobile) document.body.classList.add('lupa-mobile');
+
+let currentTickerIndex = 0;
+let tickerCycleInterval = null;
+
+function startMobileTickerCycle() {
+    if (!isMobile) return;
+    if (tickerCycleInterval) clearInterval(tickerCycleInterval);
+    tickerCycleInterval = setInterval(() => {
+        const items = document.querySelectorAll('.ntw-item');
+        if (items.length <= 1) return;
+        items.forEach(it => it.style.display = 'none');
+        currentTickerIndex = (currentTickerIndex + 1) % items.length;
+        const current = items[currentTickerIndex];
+        current.style.display = 'flex';
+        current.style.animation = 'ntw-fade-in 0.5s ease';
+    }, 6000); // Troca a notícia a cada 6 segundos
+}
+
+function toggleMobileSourcePanel() {
+    const panel = document.getElementById('visitor-url-panel');
+    panel.classList.toggle('expanded');
+}
+
+function manualZoom(factor) {
+    const baseRadius = window.__globe.baseRadius;
+    globeScale = Math.max(0.5, Math.min(6, globeScale * factor));
+    projection.scale(baseRadius * globeScale);
+    updateGlobe();
+}
+
 const TRANSLATIONS = {
     pt: {
         add_source: "ADICIONAR FONTE",
@@ -398,6 +431,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initAddSourceUI();
     initGlobalChat();
 
+    if (isMobile) {
+        document.getElementById('vup-mobile-toggle')?.addEventListener('click', toggleMobileSourcePanel);
+        document.getElementById('zoom-in-btn')?.addEventListener('click', () => manualZoom(1.3));
+        document.getElementById('zoom-out-btn')?.addEventListener('click', () => manualZoom(0.7));
+    }
+
     window.addEventListener('resize', () => {
         if (!window.__globe) return;
         const container = document.getElementById('map-container');
@@ -713,6 +752,9 @@ async function refreshHeadlines() {
         renderButtons(data);
         updateHeader(data);
         updateNewsTicker(data);
+        if (isMobile) {
+            setTimeout(startMobileTickerCycle, 1000);
+        }
     } catch (e) {
         console.error('Failed to load headlines:', e);
     }
